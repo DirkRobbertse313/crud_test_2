@@ -11,54 +11,48 @@ class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $employees = Employee::all();
-
-        if ($employees->isEmpty()) {
-            return response()->json(['message' => 'No Employees Found']);
+        $employee = Employee::all();
+        if ($employee) {
+            return response()->json($employee);
+        } else {
+            return response()->json('No Employees Found');
         }
-
-        return response()->json($employees);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  StoreEmployeeRequest  $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreEmployeeRequest $request)
     {
         $sanitized = $request->validated();
 
         if (Employee::create($sanitized)) {
-            return response()->json(['message' => 'Employee Created Successfully'], 201);
+            return response()->json(['message' => 'Employee Created Sucessfully', 201]);
+        } else {
+            return response()->json(['message' => 'Someting went wrong', 422]);
         }
-
-        return response()->json(['message' => 'Something went wrong'], 422);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  Employee  $employee
-     * @return \Illuminate\Http\JsonResponse
      */
     public function show(Employee $employee)
     {
         return response()->json($employee);
     }
+    /**
+     * Edit the specified resource.
+     */
+    public function edit(Employee $employee)
+    {
+        return response()->json(['employee' => $employee]);
+    }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  UpdateEmployeeRequest  $request
-     * @param  Employee  $employee
-     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
@@ -74,9 +68,6 @@ class EmployeeController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  Employee  $employee
-     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Employee $employee)
     {
